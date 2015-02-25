@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.saltoconsulting.dojo</groupId>
+	<artifactId>environment-settings</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>environment-settings</name>
+	<description>Example of environment settings</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<app.config.dir>/etc/hello-world</app.config.dir>
+		<app.usr>salto</app.usr>
+		<app.grp>salto</app.grp>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.saltoconsulting.dojo</groupId>
+			<artifactId>classic-application</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>rpm</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.soebes.maven.plugins</groupId>
+						<artifactId>iterator-maven-plugin</artifactId>
+						<version>0.3</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>iterator</goal>
+								</goals>
+								<configuration>
+									<folder>src/main/config</folder>
+									<pluginExecutors>
+										<pluginExecutor>
+											<plugin>
+												<groupId>com.soebes.maven.plugins</groupId>
+												<artifactId>echo-maven-plugin</artifactId>
+												<version>0.2</version>
+											</plugin>
+											<goal>echo</goal>
+											<configuration>
+												<echos>
+													<echo>This is a message: @item@</echo>
+												</echos>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-dependency-plugin</artifactId>
+												<version>2.10</version>
+											</plugin>
+											<goal>unpack</goal>
+											<configuration>
+												<artifactItems>
+													<artifactItem>
+														<groupId>com.saltoconsulting.dojo</groupId>
+														<artifactId>classic-application</artifactId>
+														<version>0.0.1-SNAPSHOT</version>
+														<type>jar</type>
+														<overWrite>false</overWrite>
+														<outputDirectory>${project.build.directory}/classic-application</outputDirectory>
+														<includes>config/*</includes>
+													</artifactItem>
+												</artifactItems>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>com.google.code.maven-replacer-plugin</groupId>
+												<artifactId>replacer</artifactId>
+												<version>1.5.3</version>
+											</plugin>
+											<goal>replace</goal>
+											<configuration>
+												<basedir>${project.build.directory}/classic-application/config</basedir>
+												<outputBasedir>${project.build.directory}</outputBasedir>
+												<outputDir>@item@/classic-application</outputDir>
+												<includes>
+													<include>**/*</include>
+												</includes>
+												<tokenValueMap>src/main/config/@item@/dictionary.properties</tokenValueMap>
+												<delimiters>
+													<delimiter>__</delimiter>
+												</delimiters>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>rpm-maven-plugin</artifactId>
+												<version>2.1.2</version>
+											</plugin>
+											<goal>rpm</goal>
+											<configuration>
+												<name>hello-world-config-@item@</name>
+												<distribution>SALTO Consulting</distribution>
+												<group>Applications/Programming</group>
+												<packager>Quentin Vandekerckhove</packager>
+												<needarch>false</needarch>
+												<provides>
+													<provide><![CDATA[ hello-world-config = ${project.version} ]]></provide>
+												</provides>
+												<preinstallScriptlet>
+													<script>
+														<![CDATA[
+if ! id -u ${app.usr} > /dev/null 2>&1
+then
+		useradd ${app.usr}
+		echo ${app.usr} | passwd --stdin ${app.usr}
+fi
+																	]]>
+													</script>
+												</preinstallScriptlet>
+												<mappings>
+													<mapping>
+														<directory>${app.config.dir}</directory>
+														<filemode>600</filemode>
+														<username>${app.usr}</username>
+														<groupname>${app.grp}</groupname>
+														<configuration>true</configuration>
+														<sources>
+															<source>
+																<location>${project.build.directory}/@item@/classic-application</location>
+															</source>
+														</sources>
+													</mapping>
+													<mapping>
+														<directory>${app.config.dir}</directory>
+														<filemode>700</filemode>
+														<username>${app.usr}</username>
+														<groupname>${app.grp}</groupname>
+													</mapping>
+												</mappings>
+											</configuration>
+										</pluginExecutor>
+									</pluginExecutors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
