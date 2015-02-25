@@ -1,0 +1,2 @@
+= Example of packaging of externalized configuration managed by environment
+RPM package to externalize application configuration
