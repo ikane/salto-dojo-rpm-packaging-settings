@@ -1,2 +1,4 @@
 = Example of packaging of externalized configuration managed by environment
-RPM package to externalize application configuration
+
+This is a piece of an example on how to package a Java application with externalized configuration. This project is
+the packaging of the externalized configuration. 
