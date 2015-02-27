@@ -10,15 +10,15 @@ Celle-ci repose sur :
  - chaque environnement a son dictionnaire token/valeur
  
 ----
-/src
-  |-- main
-      |-- config
-        |-- qualification
+/src/
+  |-- main/
+      |-- config/
+        |-- qualification/
             |-- dictionary.properties
-        |-- recette
+        |-- recette/
             |-- dictionary.properties
-        |-- preproduction
+        |-- preproduction/
             |-- dictionary.properties
-        |-- production
+        |-- production/
             |-- dictionary.properties 
 ----
