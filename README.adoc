@@ -4,11 +4,11 @@ Cet exemple illustre une solution pour packager la configuration d'une applicati
 Celle-ci repose sur :
 
  - les artifacts jar/war contiennent des templates des configurations dans `/config/` par convention
- - les configurations liées à l'environnement sont représentées par des tokens dans les templates sous la forme __MON_TOKEN__
+ - les configurations liées à l'environnement sont représentées par des tokens dans les templates sous la forme `__MON_TOKEN__`
  - les tokens sont remplacés par leurs valeurs réelles lors de la construction des RPM
  - les valeurs sont mises dans un répertoire par environnement
  
-````
+----
 /src
   |-- main
       |-- config
@@ -16,4 +16,4 @@ Celle-ci repose sur :
         |-- recette
         |-- preproduction
         |-- production
-````
+----
