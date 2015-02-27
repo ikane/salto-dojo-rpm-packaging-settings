@@ -1,4 +1,4 @@
-= Exemple de packaging des configurations automatiquement décliné par environnement
+= Packaging de configurations avec RPM, automatiquement décliné par environnement
 
 Cette exemple illustre une solution pour réaliser un packaging de configurations externalisées et déployable
 en fonction de l'environnement.
