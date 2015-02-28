@@ -1,0 +1,24 @@
+= Package de configurations par environnement
+
+Cet exemple illustre une solution pour packager la configuration d'une application par environnement automatiquement.
+Celle-ci repose sur :
+
+ - les artifacts jar/war contiennent des templates des configurations dans `/config/` par convention
+ - les configurations liées à l'environnement sont représentées par des tokens dans les templates sous la forme `__MON_TOKEN__`
+ - les tokens sont remplacés par leurs valeurs réelles lors de la construction des RPM
+ - les valeurs sont mises dans un répertoire par environnement
+ - chaque environnement a son dictionnaire token/valeur
+ 
+----
+/src/
+  |-- main/
+      |-- config/
+        |-- qualification/
+            |-- dictionary.properties
+        |-- recette/
+            |-- dictionary.properties
+        |-- preproduction/
+            |-- dictionary.properties
+        |-- production/
+            |-- dictionary.properties 
+----
