@@ -15,14 +15,6 @@
 		<app.grp>salto</app.grp>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.saltoconsulting.dojo</groupId>
-			<artifactId>classic-application</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
-
 	<profiles>
 		<profile>
 			<id>rpm</id>
