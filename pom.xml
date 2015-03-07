@@ -10,7 +10,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<app.config.dir>/etc/hello-world</app.config.dir>
 		<app.usr>salto</app.usr>
 		<app.grp>salto</app.grp>
 	</properties>
@@ -26,6 +25,7 @@
 						<version>0.3</version>
 						<executions>
 							<execution>
+								<id>classic-application</id>
 								<phase>package</phase>
 								<goals>
 									<goal>iterator</goal>
@@ -109,14 +109,14 @@
 if ! id -u ${app.usr} > /dev/null 2>&1
 then
 		useradd ${app.usr}
-		echo ${app.usr} | passwd --stdin ${app.usr}
+
 fi
 																	]]>
 													</script>
 												</preinstallScriptlet>
 												<mappings>
 													<mapping>
-														<directory>${app.config.dir}</directory>
+														<directory>/etc/hello-world</directory>
 														<filemode>600</filemode>
 														<username>${app.usr}</username>
 														<groupname>${app.grp}</groupname>
@@ -128,10 +128,275 @@ fi
 														</sources>
 													</mapping>
 													<mapping>
-														<directory>${app.config.dir}</directory>
+														<directory>/etc/hello-world</directory>
 														<filemode>700</filemode>
 														<username>${app.usr}</username>
 														<groupname>${app.grp}</groupname>
+													</mapping>
+												</mappings>
+											</configuration>
+										</pluginExecutor>
+									</pluginExecutors>
+								</configuration>
+							</execution>
+							
+							
+							
+							<execution>
+								<id>database-management</id>
+								<phase>package</phase>
+								<goals>
+									<goal>iterator</goal>
+								</goals>
+								<configuration>
+									<folder>src/main/config</folder>
+									<pluginExecutors>
+										<pluginExecutor>
+											<plugin>
+												<groupId>com.soebes.maven.plugins</groupId>
+												<artifactId>echo-maven-plugin</artifactId>
+												<version>0.2</version>
+											</plugin>
+											<goal>echo</goal>
+											<configuration>
+												<echos>
+													<echo>This is a message: @item@</echo>
+												</echos>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-dependency-plugin</artifactId>
+												<version>2.10</version>
+											</plugin>
+											<goal>unpack</goal>
+											<configuration>
+												<artifactItems>
+													<artifactItem>
+														<groupId>com.saltoconsulting.dojo</groupId>
+														<artifactId>database-management</artifactId>
+														<version>0.0.1-SNAPSHOT</version>
+														<type>jar</type>
+														<overWrite>false</overWrite>
+														<outputDirectory>${project.build.directory}/database-management</outputDirectory>
+														<includes>config/*</includes>
+													</artifactItem>
+												</artifactItems>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>com.google.code.maven-replacer-plugin</groupId>
+												<artifactId>replacer</artifactId>
+												<version>1.5.3</version>
+											</plugin>
+											<goal>replace</goal>
+											<configuration>
+												<basedir>${project.build.directory}/database-management/config</basedir>
+												<outputBasedir>${project.build.directory}</outputBasedir>
+												<outputDir>@item@/database-management</outputDir>
+												<includes>
+													<include>**/*</include>
+												</includes>
+												<tokenValueMap>src/main/config/@item@/dictionary.properties</tokenValueMap>
+												<delimiters>
+													<delimiter>__</delimiter>
+												</delimiters>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>rpm-maven-plugin</artifactId>
+												<version>2.1.2</version>
+											</plugin>
+											<goal>rpm</goal>
+											<configuration>
+												<name>database-management-config-@item@</name>
+												<distribution>SALTO Consulting</distribution>
+												<group>Applications/Programming</group>
+												<packager>Quentin Vandekerckhove</packager>
+												<needarch>false</needarch>
+												<provides>
+													<provide><![CDATA[ database-management-config = ${project.version} ]]></provide>
+												</provides>
+												<preinstallScriptlet>
+													<script>
+														<![CDATA[
+if ! id -u ${app.usr} > /dev/null 2>&1
+then
+		useradd ${app.usr}
+
+fi
+																	]]>
+													</script>
+												</preinstallScriptlet>
+												<mappings>
+													<mapping>
+														<directory>/etc/database-management</directory>
+														<filemode>600</filemode>
+														<username>${app.usr}</username>
+														<groupname>${app.grp}</groupname>
+														<configuration>true</configuration>
+														<sources>
+															<source>
+																<location>${project.build.directory}/@item@/database-management</location>
+																<excludes>
+																	<exclude>hello-webapp.xml</exclude>
+																</excludes>
+															</source>
+														</sources>
+													</mapping>
+													<mapping>
+														<directory>/etc/database-management</directory>
+														<filemode>700</filemode>
+														<username>${app.usr}</username>
+														<groupname>${app.grp}</groupname>
+													</mapping>
+												</mappings>
+											</configuration>
+										</pluginExecutor>
+									</pluginExecutors>
+								</configuration>
+							</execution>
+							
+							
+							
+							<execution>
+								<id>web-application</id>
+								<phase>package</phase>
+								<goals>
+									<goal>iterator</goal>
+								</goals>
+								<configuration>
+									<folder>src/main/config</folder>
+									<pluginExecutors>
+										<pluginExecutor>
+											<plugin>
+												<groupId>com.soebes.maven.plugins</groupId>
+												<artifactId>echo-maven-plugin</artifactId>
+												<version>0.2</version>
+											</plugin>
+											<goal>echo</goal>
+											<configuration>
+												<echos>
+													<echo>This is a message: @item@</echo>
+												</echos>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>org.apache.maven.plugins</groupId>
+												<artifactId>maven-dependency-plugin</artifactId>
+												<version>2.10</version>
+											</plugin>
+											<goal>unpack</goal>
+											<configuration>
+												<artifactItems>
+													<artifactItem>
+														<groupId>com.saltoconsulting.dojo</groupId>
+														<artifactId>web-application</artifactId>
+														<version>0.0.1-SNAPSHOT</version>
+														<type>war</type>
+														<overWrite>false</overWrite>
+														<outputDirectory>${project.build.directory}/web-application</outputDirectory>
+														<includes>config/*</includes>
+													</artifactItem>
+												</artifactItems>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>com.google.code.maven-replacer-plugin</groupId>
+												<artifactId>replacer</artifactId>
+												<version>1.5.3</version>
+											</plugin>
+											<goal>replace</goal>
+											<configuration>
+												<basedir>${project.build.directory}/web-application/config</basedir>
+												<outputBasedir>${project.build.directory}</outputBasedir>
+												<outputDir>@item@/web-application</outputDir>
+												<includes>
+													<include>**/*</include>
+												</includes>
+												<tokenValueMap>src/main/config/@item@/dictionary.properties</tokenValueMap>
+												<delimiters>
+													<delimiter>__</delimiter>
+												</delimiters>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<plugin>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>rpm-maven-plugin</artifactId>
+												<version>2.1.2</version>
+											</plugin>
+											<goal>rpm</goal>
+											<configuration>
+												<name>web-application-config-@item@</name>
+												<distribution>SALTO Consulting</distribution>
+												<group>Applications/Programming</group>
+												<packager>Quentin Vandekerckhove</packager>
+												<needarch>false</needarch>
+												<provides>
+													<provide><![CDATA[ web-application-config = ${project.version} ]]></provide>
+												</provides>
+												<preinstallScriptlet>
+													<script>
+														<![CDATA[
+if ! id -u ${app.usr} > /dev/null 2>&1
+then
+		useradd ${app.usr}
+fi
+																	]]>
+													</script>
+												</preinstallScriptlet>
+												<mappings>
+													<mapping>
+														<directory>/etc/web-application</directory>
+														<filemode>600</filemode>
+														<username>${app.usr}</username>
+														<groupname>${app.grp}</groupname>
+														<configuration>true</configuration>
+														<sources>
+															<source>
+																<location>${project.build.directory}/@item@/web-application</location>
+																<excludes>
+																	<exclude>hello-webapp.xml</exclude>
+																</excludes>
+															</source>
+														</sources>
+													</mapping>
+													<mapping>
+														<directory>/etc/web-application</directory>
+														<filemode>700</filemode>
+														<username>${app.usr}</username>
+														<groupname>${app.grp}</groupname>
+													</mapping>
+													<mapping>
+														<directory>/opt/apache-tomcat-8.0.18/conf/Catalina</directory>
+														<filemode>700</filemode>
+														<username>tomcat</username>
+														<groupname>tomcat</groupname>
+													</mapping>
+													<mapping>
+														<directory>/opt/apache-tomcat-8.0.18/conf/Catalina/localhost</directory>
+														<filemode>700</filemode>
+														<username>tomcat</username>
+														<groupname>tomcat</groupname>
+													</mapping>
+													<mapping>
+														<directory>/opt/apache-tomcat-8.0.18/conf/Catalina/localhost</directory>
+														<directoryIncluded>false</directoryIncluded>
+														<filemode>644</filemode>
+														<username>tomcat</username>
+														<groupname>tomcat</groupname>
+														<sources>
+															<source>
+																<location>${project.build.directory}/@item@/web-application/hello-webapp.xml</location>
+															</source>
+														</sources>
 													</mapping>
 												</mappings>
 											</configuration>
