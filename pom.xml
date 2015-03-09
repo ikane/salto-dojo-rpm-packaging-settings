@@ -95,7 +95,7 @@
 											</plugin>
 											<goal>rpm</goal>
 											<configuration>
-												<name>hello-world-config-@item@</name>
+												<name>classic-app-config-@item@</name>
 												<distribution>SALTO Consulting</distribution>
 												<group>Applications/Programming</group>
 												<packager>Quentin Vandekerckhove</packager>
@@ -334,7 +334,7 @@ fi
 											</plugin>
 											<goal>rpm</goal>
 											<configuration>
-												<name>web-application-config-@item@</name>
+												<name>web-app-config-@item@</name>
 												<distribution>SALTO Consulting</distribution>
 												<group>Applications/Programming</group>
 												<packager>Quentin Vandekerckhove</packager>
