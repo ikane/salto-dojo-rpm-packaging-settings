@@ -101,7 +101,7 @@
 												<packager>Quentin Vandekerckhove</packager>
 												<needarch>false</needarch>
 												<provides>
-													<provide><![CDATA[ hello-world-config = ${project.version} ]]></provide>
+													<provide><![CDATA[ classic-app-config = ${project.version} ]]></provide>
 												</provides>
 												<preinstallScriptlet>
 													<script>
@@ -340,7 +340,7 @@ fi
 												<packager>Quentin Vandekerckhove</packager>
 												<needarch>false</needarch>
 												<provides>
-													<provide><![CDATA[ web-application-config = ${project.version} ]]></provide>
+													<provide><![CDATA[ web-app-config = ${project.version} ]]></provide>
 												</provides>
 												<preinstallScriptlet>
 													<script>
