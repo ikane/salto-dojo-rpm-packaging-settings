@@ -22,3 +22,9 @@ Celle-ci repose sur :
         |-- production/
             |-- dictionary.properties 
 ----
+
+
+
+.Build package
+[source,bash]
+mvn package -P rpm
